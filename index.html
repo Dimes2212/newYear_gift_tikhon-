@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Year Gift</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="scene">
+    <div class="glow"></div>
+
+    <h1 class="title">Мы знаем, как вы проведёте одни из выходных 2026 года</h1>
+    <p class="subtitle">Нажмите на конверт ✨</p>
+
+    <section class="envelope-wrap" aria-label="Подарочный конверт">
+      <button id="envelopeBtn" class="envelope" aria-label="Открыть конверт" type="button">
+        <!-- Внутри "лист" с содержимым -->
+        <div class="letter" aria-hidden="true">
+          <div class="letter-inner">
+            <div class="badge">🎁</div>
+            <div class="letter-title">Сюрприз!</div>
+            <div class="letter-text">Сертификат на картинг</div>
+
+            <a class="download" href="./assets/certificate.pdf" download>
+              Скачать сертификат
+            </a>
+
+            <div class="hint">Если кнопка не работает — проверь, что файл лежит в <code>/assets</code>.</div>
+          </div>
+        </div>
+
+        <!-- Части конверта -->
+        <div class="env-body"></div>
+        <div class="env-flap"></div>
+        <div class="env-front"></div>
+
+        <!-- маленькая печать -->
+        <div class="seal" aria-hidden="true">NG</div>
+      </button>
+    </section>
+
+    <!-- Низ: дорога + машинка -->
+    <div class="road" aria-hidden="true">
+      <div class="lane"></div>
+      <div id="kart" class="kart">
+        <div class="kart-body"></div>
+        <div class="wheel w1"></div>
+        <div class="wheel w2"></div>
+        <div class="driver"></div>
+      </div>
+    </div>
+
+    <div class="footer-note">С Новым годом 🥂</div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
