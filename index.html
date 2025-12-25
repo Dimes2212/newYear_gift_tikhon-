@@ -4,46 +4,275 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Year Gift</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root{
+      --bg1:#0b0f17;
+      --bg2:#0f1b2d;
+      --paper:#f7f4ef;
+      --ink:#0f1220;
+      --env:#b7d6d6;
+      --env2:#9fc6c6;
+      --shadow: rgba(0,0,0,.25);
+      --accent:#ffffff;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--accent);
+      background: radial-gradient(1200px 600px at 50% 10%, #1f3a64 0%, var(--bg2) 35%, var(--bg1) 100%);
+      overflow-x:hidden;
+    }
+
+    .scene{
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      padding:32px 18px 120px;
+      position:relative;
+    }
+
+    h1{
+      margin:14px 0 0;
+      text-align:center;
+      font-size: clamp(18px, 3vw, 30px);
+      line-height:1.15;
+      max-width:900px;
+    }
+
+    .subtitle{
+      opacity:.8;
+      font-size:14px;
+    }
+
+    /* ===== ENVELOPE ===== */
+
+    .envelope-wrap{
+      width:min(520px, 92vw);
+      display:flex;
+      justify-content:center;
+      position:relative;
+    }
+
+    .envelope{
+      width:min(520px, 92vw);
+      aspect-ratio:16/11;
+      position:relative;
+      background:transparent;
+      border:0;
+      cursor:pointer;
+      filter: drop-shadow(0 22px 30px rgba(0,0,0,.35));
+      transition: transform .25s ease;
+    }
+
+    .envelope:hover{ transform: translateY(-2px); }
+
+    .env-body{
+      position:absolute;
+      inset:18% 10%;
+      background: linear-gradient(135deg, var(--env), var(--env2));
+      border-radius:18px;
+      z-index:2;
+    }
+
+    .env-front{
+      position:absolute;
+      inset:18% 10%;
+      border-radius:18px;
+      z-index:4;
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 55%);
+    }
+
+    .env-flap{
+      position:absolute;
+      left:10%;
+      right:10%;
+      top:18%;
+      height:48%;
+      background: linear-gradient(135deg, #c9e1e1, #a9d0d0);
+      border-radius:18px;
+      transform-origin: 50% 0%;
+      transform: rotateX(0deg);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      z-index:5;
+      transition: transform .75s cubic-bezier(.2,.9,.2,1);
+    }
+
+    /* ПИСЬМО */
+    .letter{
+      position:absolute;
+      left:50%;
+      bottom:12%;
+      width:80%;
+      height:75%;
+      transform: translate(-50%,40%) scale(.98);
+      background: var(--paper);
+      border-radius:14px;
+      box-shadow:0 8px 18px rgba(0,0,0,.18);
+      opacity:0;
+      transition: transform .7s cubic-bezier(.2,.9,.2,1), opacity .4s ease;
+      z-index:10; /* ВАЖНО */
+      pointer-events:none;
+    }
+
+    .letter-inner{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color: var(--ink);
+      text-align:center;
+    }
+
+    .letter-title{
+      font-size:22px;
+      font-weight:700;
+    }
+
+    .download{
+      margin-top:10px;
+      padding:12px 16px;
+      border-radius:999px;
+      background:#0f1220;
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      pointer-events:auto;
+    }
+
+    /* OPEN */
+    .envelope.is-open .env-flap{
+      transform: rotateX(170deg);
+    }
+    .envelope.is-open + .letter{
+      opacity:1;
+      transform: translate(-50%,-8%) scale(1);
+      pointer-events:auto;
+    }
+
+    /* FADE OUT — ТОЛЬКО КОНВЕРТ */
+    .envelope.fade-out{
+      opacity:0;
+      transform: translateY(12px) scale(.98);
+      transition: opacity .6s ease, transform .6s ease;
+      pointer-events:none;
+    }
+
+    /* ===== ROAD ===== */
+
+    .road{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      height:120px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.45)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,.25) 0 40px,
+          rgba(255,255,255,0) 40px 80px
+        );
+      background-size: 100% 100%, 160px 2px;
+      background-position: center 70%, 0 60%;
+      border-top:1px solid rgba(255,255,255,.12);
+      pointer-events:none;
+    }
+
+    /* ===== KART ===== */
+
+    .kart{
+      position:absolute;
+      bottom:28px;
+      left:-140px;
+      width:120px;
+      height:44px;
+      animation: driveWave 9s linear infinite;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.35));
+    }
+
+    .kart-body{
+      position:absolute;
+      left:18px;
+      top:16px;
+      width:84px;
+      height:18px;
+      border-radius:12px;
+      background:#e01818;
+    }
+
+    .driver{
+      position:absolute;
+      left:54px;
+      top:6px;
+      width:26px;
+      height:18px;
+      border-radius:12px;
+      background: rgba(255,255,255,.85);
+    }
+
+    .wheel{
+      position:absolute;
+      bottom:0;
+      width:20px;
+      height:20px;
+      border-radius:999px;
+      background:#111;
+      border:3px solid #eee;
+      animation: spin .55s linear infinite;
+    }
+
+    .w1{ left:18px; }
+    .w2{ right:16px; }
+
+    @keyframes spin{
+      to{ transform: rotate(360deg); }
+    }
+
+    /* ВОЛНООБРАЗНЫЙ МАРШРУТ */
+    @keyframes driveWave{
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(25vw, -6px); }
+      50%  { transform: translate(50vw, 4px); }
+      75%  { transform: translate(75vw, -5px); }
+      100% { transform: translate(calc(100vw + 220px), 0); }
+    }
+  </style>
 </head>
+
 <body>
   <main class="scene">
-    <div class="glow"></div>
 
-    <h1 class="title">Мы знаем, как вы проведёте одни из выходных 2026 года</h1>
-    <p class="subtitle">Нажмите на конверт ✨</p>
+    <h1>Мы знаем, как вы проведёте одни из выходных 2026 года</h1>
+    <div class="subtitle">Нажмите на конверт ✨</div>
 
-    <section class="envelope-wrap" aria-label="Подарочный конверт">
-      <button id="envelopeBtn" class="envelope" aria-label="Открыть конверт" type="button">
-        <!-- Внутри "лист" с содержимым -->
-        <div class="letter" aria-hidden="true">
-          <div class="letter-inner">
-            <div class="badge">🎁</div>
-            <div class="letter-title">Сюрприз!</div>
-            <div class="letter-text">Сертификат на картинг</div>
-
-            <a class="download" href="./assets/certificate.pdf" download>
-              Скачать сертификат
-            </a>
-
-            <div class="hint">Если кнопка не работает — проверь, что файл лежит в <code>/assets</code>.</div>
-          </div>
-        </div>
-
-        <!-- Части конверта -->
+    <div class="envelope-wrap">
+      <button class="envelope" id="envelopeBtn">
         <div class="env-body"></div>
         <div class="env-flap"></div>
         <div class="env-front"></div>
-
-        <!-- маленькая печать -->
-        <div class="seal" aria-hidden="true">NG</div>
       </button>
-    </section>
 
-    <!-- Низ: дорога + машинка -->
-    <div class="road" aria-hidden="true">
-      <div class="lane"></div>
-      <div id="kart" class="kart">
+      <!-- ПИСЬМО ВНЕ КОНВЕРТА -->
+      <div class="letter">
+        <div class="letter-inner">
+          <div class="letter-title">Сюрприз </div>
+          <a class="download" href="./assets/certificate.pdf" download>
+            Скачать сертификат
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="road">
+      <div class="kart">
         <div class="kart-body"></div>
         <div class="wheel w1"></div>
         <div class="wheel w2"></div>
@@ -51,9 +280,22 @@
       </div>
     </div>
 
-    <div class="footer-note">С Новым годом 🥂</div>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+    const envelope = document.getElementById("envelopeBtn");
+    let opened = false;
+
+    envelope.addEventListener("click", () => {
+      if (opened) return;
+      opened = true;
+
+      envelope.classList.add("is-open");
+
+      setTimeout(() => {
+        envelope.classList.add("fade-out");
+      }, 900);
+    });
+  </script>
 </body>
 </html>

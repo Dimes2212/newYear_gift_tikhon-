@@ -1,17 +1,22 @@
 const envelopeBtn = document.getElementById("envelopeBtn");
+const envelopeWrap = document.getElementById("envelopeWrap");
+const gift = document.getElementById("gift");
 
-// toggle open/close
-envelopeBtn.addEventListener("click", (e) => {
-  // если кликнули по кнопке скачивания — не закрываем конверт
-  const a = e.target.closest("a.download");
-  if (a) return;
+let opened = false;
 
-  envelopeBtn.classList.toggle("is-open");
-});
+envelopeBtn.addEventListener("click", () => {
+  if (opened) return;
+  opened = true;
 
-// optional: открыть по Enter/Space уже работает (button), но добавим "закрыть по Esc"
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    envelopeBtn.classList.remove("is-open");
-  }
+  envelopeBtn.classList.add("is-open");
+
+  // даём анимации открытия отыграть
+  setTimeout(() => {
+    envelopeWrap.classList.add("is-fading");
+  }, 900);
+
+  // после fade показываем подарок
+  setTimeout(() => {
+    gift.classList.add("is-visible");
+  }, 1450);
 });
